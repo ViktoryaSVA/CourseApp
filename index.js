@@ -15,6 +15,7 @@ const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-acce
 const md5 = require('md5')
 const User = require('./models/user')
 const varMiddleware = require('./middleware/variables')
+const userMiddleware = require('./middleware/user')
 
 const MONGODB_URI = "mongodb://localhost:27017/courseDB"
 const app = express()
@@ -41,6 +42,7 @@ app.use(session({
     store
 }))
 app.use(varMiddleware)
+app.use(userMiddleware)
 
 app.use('/', homeRoutes)
 app.use('/add', addRoutes)
