@@ -17,7 +17,7 @@ const toDate = date => {
 }
 
 document.querySelectorAll('.price').forEach(node => {
-  node.textContent = toCurrency(node.textContent)
+    node.textContent = toCurrency(node.textContent)
 })
 
 document.querySelectorAll('.date').forEach(node => {
@@ -26,16 +26,20 @@ document.querySelectorAll('.date').forEach(node => {
 
 const $card = document.querySelector('#card')
 
-if ($card){
+if ($card) {
     $card.addEventListener('click', event => {
-        if (event.target.classList.contains('js-remove')){
+        if (event.target.classList.contains('js-remove')) {
             const id = event.target.dataset.id
+            const csrf = event.target.dataset.csrf
 
-            fetch('/card/remove/' + id,{
-                method: 'delete'
+            fetch('/card/remove/' + id, {
+                method: 'delete',
+                headers: {
+                    'X-XSRF-TOKEN': csrf
+                },
             }).then(res => res.json())
                 .then(card => {
-                    if (card.courses.length){
+                    if (card.courses.length) {
                         const hmtl = card.courses.map(c => {
                             return `
                             <tr>
@@ -49,7 +53,7 @@ if ($card){
                         }).join('')
                         $card.querySelector('tbody').innerHTML = hmtl
                         $card.querySelector('.price').textContent = toCurrency(card.price)
-                    }else{
+                    } else {
                         $card.innerHTML = '<p>Корзина пуста</p>'
                     }
                 })
